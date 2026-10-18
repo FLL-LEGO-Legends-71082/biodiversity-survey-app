@@ -1,8 +1,8 @@
-import './App.css'
+
 function ObservationCard({ observation }) {
 
   return (
-    <div className="app">
+    <div>
 
       <h3>
         {observation.species}
