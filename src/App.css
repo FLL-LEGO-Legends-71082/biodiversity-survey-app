@@ -87,6 +87,18 @@
   gap: 20px;
 }
 
+.navigation {
+  display: flex;
+  gap: 24px;
+  padding: 16px 24px;
+  border-bottom: 1px solid #ddd;
+}
+
+.navigation a {
+  text-decoration: none;
+  font-weight: 600;
+}
+
 @media (max-width: 600px) {
 
   .app {
@@ -99,6 +111,12 @@
 
   .observation-grid {
     grid-template-columns: 1fr;
+  }
+
+  .navigation {
+    gap: 12px;
+    font-size: 14px;
+    padding: 12px;
   }
 
 }
