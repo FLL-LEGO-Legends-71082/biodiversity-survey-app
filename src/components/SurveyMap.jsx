@@ -8,31 +8,26 @@ import {
 
 import 'leaflet/dist/leaflet.css'
 
-function SurveyMap() {
+function SurveyMap({latitude,longitude}) {
 
-  const position = [39.25, -76.85]
+  const position = [latitude,longitude]
 
   return (
     <MapContainer
       center={position}
-      zoom={13}
+      zoom={15}
       style={{
         height: "400px",
         width: "100%"
       }}
     >
-
       <TileLayer
         attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-
       <Marker position={position}>
-        <Popup>
-            BioScout Observation
-        </Popup>
+        <Popup> Monarch Butterfly </Popup>
       </Marker>
-
     </MapContainer>
   )
 }
