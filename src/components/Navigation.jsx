@@ -24,6 +24,10 @@ function Navigation() {
         Map
       </Link>
 
+      <Link to="/tracking">
+        Tracker Map
+      </Link>
+
       <Link to="/about">
         About
       </Link>

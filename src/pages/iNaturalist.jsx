@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+
 function INaturalist(){
+    
     const[observations, setObservations] = useState([])
     useEffect(() => {
 

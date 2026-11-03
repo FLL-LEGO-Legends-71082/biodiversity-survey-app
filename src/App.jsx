@@ -1,139 +1,79 @@
-import { useState } from 'react'
-import ObservationCard from './components/ObservationCard'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Explore from './pages/Explore'
+import AddObservation from './pages/AddObservation'
+import About from './pages/About'
+import Navigation from './components/Navigation'
+import INaturalist from './pages/iNaturalist'
+import MapPage from './pages/MapPage'
+import GPSTracker from './pages/GPSTracker'
 import './App.css'
+import { useState } from 'react'
 
 function App() {
-
+  
   const [observations, setObservations] = useState([
+  
     {
       id: 1,
       species: "Monarch Butterfly",
+      scientificName: "Danaus plexippus",
       location: "Centennial Park",
       category: "Insect"
     },
     {
       id: 2,
       species: "American Robin",
+      scientificName: "Turdus migratorius",
       location: "Patapsco Valley",
       category: "Bird"
     }
   ])
 
-  const [species, setSpecies] = useState("")
-  const [location, setLocation] = useState("")
-  const [category, setCategory] = useState("")
-
-  function handleSubmit(event) {
-    event.preventDefault()
-    
-    if (
-    species.trim() === "" ||
-    location.trim() === "" ||
-    category.trim() === ""
-    ) {
-      alert("Please fill in all fields.")
-      return
-    }
-    
-    const newObservation = {
-      id: Date.now(),
-      species: species,
-      location: location,
-      category: category
-    }
-
-    setObservations([
-      ...observations,
-      newObservation
-    ])
-
-    setSpecies("")
-    setLocation("")
-    setCategory("")
-  }
-
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>🌿Biodiversity Explorer</h1>
-      <p>Discover and document biodiversity in our community</p>
-      </header>
+    <BrowserRouter>
       
-      <form className="observation-form" onSubmit={handleSubmit}>
-
-        <h2>Add Observation</h2>
-        
-        <div className="form-group">
-          <label>Species</label>
-          <input
-          type="text"
-          placeholder="Species name"
-          value={species}
-          onChange={(event) =>
-            setSpecies(event.target.value)
-          }
-          />
-          <label>Location</label>
-          <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(event) =>
-            setLocation(event.target.value)
-          }
-          />
-          <label>Category</label>
-          <select
-            value={category}
-            onChange={(event) =>
-              setCategory(event.target.value)
-            }
-          >
-            <option value="Bird">
-              Bird
-            </option>
-
-            <option value="Mammal">
-              Mammal
-            </option>
-
-            <option value="Insect">
-              Insect
-            </option>
-
-            <option value="Plant">
-              Plant
-            </option>
-
-            <option value="Reptile">
-              Reptile
-            </option>
-
-            <option value="Amphibian">
-              Amphibian
-            </option>
-          </select>
-        </div>
-
-        
-
-        <button className="primary-button" type="submit">
-          + Add Observation
-        </button>
-
-      </form>
+      <Navigation />
       
-      <h2>Recent Observations</h2>
-      <div className="observation-grid">
-       {observations.map((observation) => (
-        <ObservationCard
-          key={observation.id}
-          observation={observation}
+      <Routes>
+
+        <Route
+          path="/"
+          element={<Home />}
         />
-       ))}
-      </div>
 
-    </div>
+        <Route
+          path="/explore"
+          element={<Explore observations={observations} />}
+        />
+
+        <Route
+          path="/add"
+          element={<AddObservation setObservations={setObservations} />}
+        />
+
+        <Route
+          path="/inaturalist"
+          element={<INaturalist />}
+        />
+
+        <Route
+          path="/map"
+          element={<MapPage observations={observations} />}
+        />
+
+        <Route
+          path="/tracking"
+          element={<GPSTracker />}
+        />
+        <Route
+          path="/about"
+          element={<About />}
+        />
+
+      </Routes>
+
+    </BrowserRouter>
   )
 }
 
