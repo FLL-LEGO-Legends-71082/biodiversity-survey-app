@@ -1,77 +1,75 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Circle, CircleMarker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Circle, Polyline, useMap } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
-export default function TrackerMap({position,tracking,follow}) {
-  
-  function GpsLayer({ position, tracking, follow }) {
+// Fix Leaflet marker icons in Vite
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow
+});
+
+export default function TrackerMap({position,path,accuracy,follow}) {
+  // Move the map as the user walks
+  function FollowLocation({ position, follow }) {
     const map = useMap();
 
     useEffect(() => {
-      if (tracking && follow && position) {
-        // Preserve the user's zoom level.
-        map.panTo([position.lat, position.lng], { animate: false });
+      if (follow && position) {
+        map.panTo(position);
       }
-    }, [map, position, tracking, follow]);
+    }, [map, position, follow]);
 
-    if (!position) return null;
-
-    const center = [position.lat, position.lng];
-    const color = tracking ? "#2563eb" : "#64748b";
-
-    return (
-      <>
-        <Circle
-          center={center}
-          radius={position.accuracy}
-          pathOptions={{
-            color,
-            weight: 1,
-            fillColor: color,
-            fillOpacity: 0.12,
-          }}
-          interactive={false}
-        />
-
-        <CircleMarker
-          center={center}
-          radius={8}
-          pathOptions={{
-            color: "#ffffff",
-            weight: 3,
-            fillColor: color,
-            fillOpacity: 1,
-          }}
-        >
-          <Popup>
-            {tracking ? "Your location" : "Last known location"}
-            <br />
-            Accuracy: ±{Math.round(position.accuracy)} m
-            <br />
-            Updated: {new Date(position.timestamp).toLocaleTimeString()}
-          </Popup>
-        </CircleMarker>
-      </>
-    );
+    return null;
   }
   
   return ( 
     <MapContainer
-      center={[40.7128, -74.006]}
-      zoom={13}
-      style={{ height: "65vh", width: "100%" }}
+      center={[39.27, -76.8]}
+      zoom={16}
+      style={{ height: "500px", width: "100%" }}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        attribution="&copy; OpenStreetMap contributors"
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
 
-      {/* Keep your existing BioScout layers here. */}
+      {position && (
+        <>
+          <Marker position={position} />
 
-      <GpsLayer
+          {accuracy !== null && (
+            <Circle
+              center={position}
+              radius={accuracy}
+              pathOptions={{
+                color: "blue",
+                fillOpacity: 0.1
+              }}
+            />
+          )}
+        </>
+      )}
+
+      {path.length >= 2 && (
+        <Polyline
+          positions={path}
+          pathOptions={{
+            color: "blue",
+            weight: 5
+          }}
+        />
+      )}
+
+      <FollowLocation
         position={position}
-        tracking={tracking}
         follow={follow}
       />
-    </MapContainer>  
+    </MapContainer>
   )
 }
